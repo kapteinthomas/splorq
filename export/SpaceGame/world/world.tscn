@@ -1,0 +1,85 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://world/world.gd" type="Script" id=1]
+[ext_resource path="res://Mobs/Mob1/AlienGreen.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Power ups/PowerUp1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://world/background.png" type="Texture" id=4]
+[ext_resource path="res://Character/Character_old.tscn" type="PackedScene" id=5]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=6]
+
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -43.0002, -64.0004, 0, 0, 0, 0, -54.0002, 657.999, 0, 0, 0, 0, 1045, 657.999, 0, 0, 0, 0, 1043, -68.0004, 0, 0, 0, 0, -43.0002, -64.0004 )
+}
+
+[sub_resource type="RectangleShape2D" id=2]
+
+[node name="world" type="Node"]
+script = ExtResource( 1 )
+Mob = ExtResource( 2 )
+PowerUp = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 520.192, 277.591 )
+scale = Vector2( 0.7, 0.7 )
+texture = ExtResource( 4 )
+
+[node name="Character" parent="." instance=ExtResource( 5 )]
+position = Vector2( 555.416, 274.475 )
+
+[node name="MobHandler" type="Node" parent="."]
+
+[node name="MobSpawnPath" type="Path2D" parent="MobHandler"]
+curve = SubResource( 1 )
+
+[node name="SpawnLocation" type="PathFollow2D" parent="MobHandler/MobSpawnPath"]
+position = Vector2( -43.0002, -64.0004 )
+rotation = 1.58603
+
+[node name="Timer" type="Timer" parent="MobHandler"]
+wait_time = 1.5
+autostart = true
+
+[node name="Walls" type="Node" parent="."]
+
+[node name="Left" type="StaticBody2D" parent="Walls"]
+position = Vector2( -10, 300 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Left"]
+scale = Vector2( 1, 30 )
+shape = SubResource( 2 )
+
+[node name="Right" type="StaticBody2D" parent="Walls"]
+position = Vector2( 1060, 300 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Right"]
+scale = Vector2( 1, 30 )
+shape = SubResource( 2 )
+
+[node name="Up" type="StaticBody2D" parent="Walls"]
+position = Vector2( 515, -10 )
+rotation = 1.5708
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Up"]
+scale = Vector2( 1, 55 )
+shape = SubResource( 2 )
+
+[node name="Down" type="StaticBody2D" parent="Walls"]
+position = Vector2( 515, 610 )
+rotation = 1.5708
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Down"]
+scale = Vector2( 1, 55 )
+shape = SubResource( 2 )
+
+[node name="HUD" parent="." instance=ExtResource( 6 )]
+
+[node name="Node" type="Node" parent="."]
+
+[node name="PowerUpTimer" type="Timer" parent="Node"]
+wait_time = 3.0
+autostart = true
+
+[connection signal="timeout" from="MobHandler/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="Node/PowerUpTimer" to="." method="_on_PowerUpTimer_timeout"]

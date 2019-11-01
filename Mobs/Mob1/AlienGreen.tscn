@@ -1,0 +1,67 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Mobs/Mob1/AlienGreen.gd" type="Script" id=1]
+[ext_resource path="res://Art/AlienGreen/AlienGreen0000.png" type="Texture" id=2]
+[ext_resource path="res://Art/AlienGreen/AlienGreen0001.png" type="Texture" id=3]
+[ext_resource path="res://Art/AlienGreen/AlienGreen0002.png" type="Texture" id=4]
+[ext_resource path="res://Art/AlienGreen/AlienGreen0003.png" type="Texture" id=5]
+[ext_resource path="res://Art/AlienGreen/AlienGreen0004.png" type="Texture" id=6]
+[ext_resource path="res://Sounds/Hit_Hurt9.wav" type="AudioStream" id=7]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 27.118
+height = 20.8783
+
+[sub_resource type="Animation" id=3]
+resource_name = "Default"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:rotation_degrees")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1.1487 ),
+"update": 0,
+"values": [ -15.0, 15.0 ]
+}
+
+[node name="AlienGreen" type="Area2D"]
+collision_layer = 2
+collision_mask = 25
+script = ExtResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.1, 0.1 )
+frames = SubResource( 1 )
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -3.46641, -0.329681 )
+shape = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Default = SubResource( 3 )
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+volume_db = -28.238
+
+[node name="AdjustPosTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[connection signal="area_entered" from="." to="." method="_on_AlienGreen_area_entered"]
+[connection signal="finished" from="DeathSound" to="." method="_on_DeathSound_finished"]
+[connection signal="timeout" from="AdjustPosTimer" to="." method="_on_AdjustPosTimer_timeout"]

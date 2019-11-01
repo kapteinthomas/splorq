@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://world/world.gd" type="Script" id=1]
+[ext_resource path="res://Mobs/Mob1/AlienGreen.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Art/Background.png" type="Texture" id=3]
+[ext_resource path="res://world/Walls.tscn" type="PackedScene" id=4]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Character/Character.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -43.0002, -64.0004, 0, 0, 0, 0, -54.0002, 657.999, 0, 0, 0, 0, 1045, 657.999, 0, 0, 0, 0, 1043, -68.0004, 0, 0, 0, 0, -43.0002, -64.0004 )
+}
+
+[node name="world" type="Node"]
+script = ExtResource( 1 )
+Mob = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 510, 300 )
+scale = Vector2( 1.05, 1.05 )
+texture = ExtResource( 3 )
+
+[node name="MobHandler" type="Node" parent="."]
+
+[node name="MobSpawnPath" type="Path2D" parent="MobHandler"]
+curve = SubResource( 1 )
+
+[node name="SpawnLocation" type="PathFollow2D" parent="MobHandler/MobSpawnPath"]
+position = Vector2( -43.0002, -64.0004 )
+rotation = 1.58603
+
+[node name="Timer" type="Timer" parent="MobHandler"]
+wait_time = 5.0
+autostart = true
+
+[node name="Walls" parent="." instance=ExtResource( 4 )]
+
+[node name="HUD" parent="." instance=ExtResource( 5 )]
+
+[node name="Node" type="Node" parent="."]
+
+[node name="PowerUpTimer" type="Timer" parent="Node"]
+wait_time = 10.0
+autostart = true
+
+[node name="Character" parent="." instance=ExtResource( 6 )]
+position = Vector2( 525.389, 310.228 )
+
+[connection signal="timeout" from="MobHandler/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="Node/PowerUpTimer" to="." method="_on_PowerUpTimer_timeout"]

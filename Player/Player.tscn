@@ -1,0 +1,81 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Character/Character_old.gd" type="Script" id=1]
+[ext_resource path="res://laser/PlayerLaser.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sounds/Laser_Shoot6.wav" type="AudioStream" id=3]
+[ext_resource path="res://Sounds/Pickup_Coin.wav" type="AudioStream" id=4]
+[ext_resource path="res://Sounds/player_hurt.wav" type="AudioStream" id=5]
+[ext_resource path="res://Sounds/Heal.wav" type="AudioStream" id=6]
+[ext_resource path="res://Sounds/Powerup1.wav" type="AudioStream" id=7]
+
+[sub_resource type="Animation" id=1]
+resource_name = "hurt"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false, true, false, true, false, true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Player" type="Area2D"]
+visible = false
+modulate = Color( 1, 0, 0, 1 )
+collision_mask = 14
+script = ExtResource( 1 )
+laser = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="GunPowerTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="PowerUpTimer" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="LaserSound" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 3 )
+volume_db = -20.0
+
+[node name="PickUpSound" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 4 )
+volume_db = -20.0
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 5 )
+volume_db = -20.0
+
+[node name="Heal" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 6 )
+volume_db = -20.0
+
+[node name="PowerUp1" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 7 )
+volume_db = -20.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/hurt = SubResource( 1 )
+
+[connection signal="body_entered" from="." to="." method="_on_Character_body_entered"]
+[connection signal="timeout" from="PowerUpTimer" to="." method="_on_PowerUpTimer_timeout"]

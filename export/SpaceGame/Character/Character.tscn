@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Character/Character_old.gd" type="Script" id=1]
+[ext_resource path="res://laser/PlayerLaser.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Character/CharacterSide.png" type="Texture" id=3]
+[ext_resource path="res://Character/Gun.png" type="Texture" id=4]
+[ext_resource path="res://Sounds/Laser_Shoot6.wav" type="AudioStream" id=5]
+
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16.9164, 34.8562 )
+
+[node name="Character" type="Area2D"]
+script = ExtResource( 1 )
+laser = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 5, 5 )
+texture = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="GunRotPoint" type="Position2D" parent="."]
+position = Vector2( 0, 5 )
+
+[node name="Sprite" type="Sprite" parent="GunRotPoint"]
+position = Vector2( 25, 0 )
+scale = Vector2( 5, 5 )
+texture = ExtResource( 4 )
+
+[node name="LaserSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -19.974
+
+[node name="GunPowerTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[connection signal="body_entered" from="." to="." method="_on_Character_body_entered"]
